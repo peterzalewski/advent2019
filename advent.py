@@ -4,13 +4,10 @@ INTCODE_ADD = 1
 INTCODE_MULTIPLY = 2
 INTCODE_STOP = 99
 
-def day2():
-  with open('day2/input.txt', 'r') as intcode:
-    opcodes = [int(code) for code in next(intcode).split(',')]
+def run_intcode(intcode):
+  assert(len(intcode) > 0)
 
-  # Introduce "1202 program" error
-  opcodes[1] = 12
-  opcodes[2] = 2
+  opcodes = intcode[:]
 
   i_p = 0
   while opcodes[i_p] != INTCODE_STOP:
@@ -29,7 +26,23 @@ def day2():
 
     i_p += 4
 
-  return opcodes[0]
+  return opcodes
+
+def day2():
+  with open('day2/input.txt', 'r') as intcode:
+    opcodes = [int(code) for code in next(intcode).split(',')]
+
+  for noun in range(0, 100):
+    for verb in range(0, 100):
+      opcodes[1] = noun
+      opcodes[2] = verb 
+
+      final_state = run_intcode(opcodes)
+
+      if final_state[0] == 19690720:
+        return 100 * noun + verb
+
+  raise StopIteration()
 
 def calculate_fuel_requirement(mass):
   if mass <= 0:
